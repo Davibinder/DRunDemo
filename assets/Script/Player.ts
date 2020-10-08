@@ -9,6 +9,8 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 
+import GamePlay from "./GamePlay";
+
 enum PlayerDirection {
     Left    =   200,    
     Right   =   201,    
@@ -26,9 +28,13 @@ export default class Player extends cc.Component {
     label: cc.Label = null;
 
     // genral TS properties
-    jumpHeight : number = 0.0
-
+    jumpHeight : number = 0.0;
+    
     direction : PlayerDirection = PlayerDirection.None;
+
+    xPositionOffset : number = 4;
+    
+    gamePlay : GamePlay = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -37,7 +43,7 @@ export default class Player extends cc.Component {
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this); 
         this.startJump(this.getCurrentPosition());
-        
+
     }
 
     start () {
@@ -45,14 +51,14 @@ export default class Player extends cc.Component {
     }
 
     update (dt) {
-        cc.log("direction is = "+this.direction);
+        // cc.log("direction is = "+this.direction);
         var xPos = this.node.getPosition().x;
         if(this.direction == PlayerDirection.Left){
-            xPos = xPos - 2;
+            xPos = xPos - this.xPositionOffset;
             this.node.setPosition(cc.v2(xPos,this.node.getPosition().y));
 
         }else if(this.direction == PlayerDirection.Right){
-            xPos = xPos + 2;
+            xPos = xPos + this.xPositionOffset;
             this.node.setPosition(cc.v2(xPos++,this.node.getPosition().y));
 
         }else{
@@ -67,7 +73,17 @@ export default class Player extends cc.Component {
     }
 
     startJump(position){
-        this.node.runAction(cc.jumpTo(1,position,this.jumpHeight,1));
+        // this.node.runAction(cc.jumpTo(1,position,this.jumpHeight,1));
+        var sequence = cc.sequence(
+            cc.callFunc(function() {
+                this.gamePlay.isJumpCompleted = false;
+            }.bind(this)),
+            cc.jumpTo(1,position,this.jumpHeight,1),
+            cc.callFunc(function() {
+                this.gamePlay.isJumpCompleted = true;
+            }.bind(this))
+        );
+        this.node.runAction(sequence);
     }
 
     stopAllPlayerActions(){
@@ -79,11 +95,11 @@ export default class Player extends cc.Component {
         switch(event.keyCode) {
             case cc.macro.KEY.left:
                 this.direction = PlayerDirection.Left;
-                cc.log("selected direction is ="+this.direction);
+                // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.right:
                 this.direction = PlayerDirection.Right;
-                cc.log("selected direction is ="+this.direction);
+                // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.up:
                 this.startJump(this.getCurrentPosition());

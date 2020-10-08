@@ -9,6 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import GamePlay from "./GamePlay";
+import Player from "./Player";
 
 export enum PlatformType {
     Static          =   100,    
@@ -28,6 +29,7 @@ export default class Platform extends cc.Component {
     type: PlatformType = 0;
 
     gamePlay : GamePlay = null;
+    player : Player = null;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -56,6 +58,11 @@ export default class Platform extends cc.Component {
     */
    onCollisionEnter (other, self) {
         cc.log('on collision enter');
+        if(this.gamePlay.isDownWard){
+            this.gamePlay.platformFound = true;
+            this.player.stopAllPlayerActions();
+            this.player.startJump(this.player.getCurrentPosition());
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ export default class Platform extends cc.Component {
     * @param  {Collider} self  Self Collider Component
     */
     onCollisionStay (other, self) {
-        cc.log('on collision stay');
+        // cc.log('on collision stay');
     }
     /**
     * Call after end collision
@@ -72,7 +79,8 @@ export default class Platform extends cc.Component {
     * @param  {Collider} self  Self Collider Component
     */
     onCollisionExit (other, self) {
-        cc.log('on collision exit');
+        // cc.log('on collision exit');
+        this.gamePlay.platformFound = false;
     }
     
 

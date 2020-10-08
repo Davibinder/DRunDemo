@@ -69,10 +69,10 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 26
+        "__id__": 27
       },
       {
-        "__id__": 27
+        "__id__": 28
       }
     ],
     "_prefab": null,
@@ -127,7 +127,7 @@
     },
     "_children": [],
     "_active": true,
-    "_level": 1,
+    "_level": 2,
     "_components": [
       {
         "__id__": 4
@@ -174,7 +174,7 @@
     "_skewY": 0,
     "_is3DNode": false,
     "groupIndex": 0,
-    "_id": "42x+FU4wxMd5PpA0j1CovY"
+    "_id": "71f8oqT35Io5p5xedXw0Ky"
   },
   {
     "__type__": "cc.Camera",
@@ -209,7 +209,7 @@
       "height": 1
     },
     "_renderStages": 1,
-    "_id": "5eqS/irc5A/bj55BohTwvb"
+    "_id": "e3XzihSGRJpaN74i/DF30G"
   },
   {
     "__type__": "cc.Node",
@@ -230,10 +230,10 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 24
+        "__id__": 25
       },
       {
-        "__id__": 25
+        "__id__": 26
       }
     ],
     "_prefab": null,
@@ -982,6 +982,9 @@
       },
       {
         "__id__": 23
+      },
+      {
+        "__id__": 24
       }
     ],
     "_prefab": null,
@@ -1005,8 +1008,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 19,
-      "y": -104,
+      "x": -7.374,
+      "y": -75.791,
       "z": 0
     },
     "_scale": {
@@ -1069,6 +1072,27 @@
     "_enabled": true,
     "label": null,
     "_id": "9cCIZHfwVEIapchZ3DdU/8"
+  },
+  {
+    "__type__": "cc.BoxCollider",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 21
+    },
+    "_enabled": true,
+    "tag": 0,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 90,
+      "height": 97
+    },
+    "_id": "0bQFn+yylFpbIvKePiomB+"
   },
   {
     "__type__": "cc.Sprite",
@@ -1156,6 +1180,9 @@
     "_enabled": true,
     "player": {
       "__id__": 21
+    },
+    "container": {
+      "__id__": 5
     },
     "platForm": {
       "__uuid__": "b3d654b4-0d73-40ff-9352-3abe9b006dbf"
