@@ -37,6 +37,7 @@ export default class Player extends cc.Component {
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this); 
         this.startJump(this.getCurrentPosition());
+        
     }
 
     start () {
@@ -85,6 +86,7 @@ export default class Player extends cc.Component {
                 cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.up:
+                this.startJump(this.getCurrentPosition());
                 break;
             case cc.macro.KEY.down:
                 break;
