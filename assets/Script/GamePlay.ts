@@ -8,7 +8,14 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import Platform from "./Platform";
+
+
+enum GSMacros {
+     kMinPlatformStep =	30,
+     kMaxPlatformStep =	100,    //this needs to be same as max jump force
+     kNumPlatforms	 =	15,     //more platforms to avoid poping in the case they get together
+     kPlatformStepIncrease = 5,
+}
 
 enum ComponentZOrders {
     Player      =   50,    
@@ -36,6 +43,9 @@ export default class GamePlay extends cc.Component {
     isDownWard : boolean = false;
     platformFound: boolean = false;
     isJumpCompleted:boolean = true;    
+
+    minPlatformModifier:number = GSMacros.kMinPlatformStep;
+    lastPlatformYPosition : number = 0;
     
     // LIFE-CYCLE CALLBACKS:
     onLoad () {        
@@ -44,9 +54,10 @@ export default class GamePlay extends cc.Component {
         this.player.zIndex = ComponentZOrders.Player;
         this.headerBar.zIndex = ComponentZOrders.Player - 1;
         this.player.getComponent("Player").gamePlay = this;
-        for (let index = 0; index < 20; index++) {
-            this.addNewPlatform(true);            
-        }
+        // for (let index = 0; index < 20; index++) {
+        //     this.addNewPlatform(true);            
+        // }
+        this.addNewPlatformIntials();
     }
 
     start () {
@@ -72,8 +83,10 @@ export default class GamePlay extends cc.Component {
         this.player.setPosition(cc.v2(this.player.getPosition().x,this.player.getPosition().y=this.player.getPosition().y-15))
        }
        // moves platform down
-       if(this.player.y > 30){
-           this.movePlatformsDown(2); 
+       if(this.player.y > 0){
+           this.movePlatformsDown(4); 
+           if(this.container.childrenCount < 250)
+                this.addNewPlatform_1();
        }
        // destroy platform which are out of bounds
        this.destroyPlatforms();
@@ -96,6 +109,33 @@ export default class GamePlay extends cc.Component {
                 child.y = child.y-offset; 
             }
         });
+    }
+    
+    addNewPlatformIntials(){
+        var platform = cc.instantiate(this.platForm);
+        platform.name = "platform";
+        this.container.addChild(platform);
+        platform.setPosition(cc.v2(this.player.getPosition().x,this.player.getPosition().y - 50));
+        this.lastPlatformYPosition = platform.getPosition().y;
+        platform.getComponent('Platform').gamePlay = this;
+        platform.getComponent('Platform').player = this.player.getComponent("Player");
+        let tempA = 0;
+        while(tempA < 15) {
+            this.addNewPlatform_1();
+            tempA = tempA+1;
+        }
+    }
+
+    addNewPlatform_1(){
+        var platform = cc.instantiate(this.platForm);
+        platform.name = "platform";
+        this.container.addChild(platform);
+        var randX =  this.randomIntFromInterval(-this.size.width/2+70,this.size.width/2-100);
+        var randY =  this.lastPlatformYPosition + this.randomIntFromInterval(this.minPlatformModifier,GSMacros.kMaxPlatformStep);
+        platform.setPosition(cc.v2(randX,randY));
+        this.lastPlatformYPosition = platform.getPosition().y;
+        platform.getComponent('Platform').gamePlay = this;
+        platform.getComponent('Platform').player = this.player.getComponent("Player");
     }
 
     addNewPlatform(initials:boolean) {

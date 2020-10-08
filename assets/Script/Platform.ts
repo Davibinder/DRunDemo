@@ -64,9 +64,10 @@ export default class Platform extends cc.Component {
             this.player.startJump(this.player.getCurrentPosition());
             //
             if(this.node.getPosition().y > -this.gamePlay.size.height*0.1){
-                for (let index = 0; index < 2; index++) {
-                    this.gamePlay.addNewPlatform(false);            
-                }
+                // this.gamePlay.addNewPlatform_1();
+                // for (let index = 0; index < 2; index++) {
+                //     this.gamePlay.addNewPlatform(false);            
+                // }
             }
         }
     }

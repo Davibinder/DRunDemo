@@ -32,7 +32,7 @@ export default class Player extends cc.Component {
     
     direction : PlayerDirection = PlayerDirection.None;
 
-    xPositionOffset : number = 4;
+    xPositionOffset : number = 5;
     
     gamePlay : GamePlay = null;
 
