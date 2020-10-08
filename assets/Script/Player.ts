@@ -102,7 +102,7 @@ export default class Player extends cc.Component {
                 // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.up:
-                this.startJump(this.getCurrentPosition());
+                // this.startJump(this.getCurrentPosition());
                 break;
             case cc.macro.KEY.down:
                 break;

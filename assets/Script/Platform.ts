@@ -35,7 +35,7 @@ export default class Platform extends cc.Component {
     onLoad () {
         var manager = cc.director.getCollisionManager();
         manager.enabled = true;
-        manager.enabledDebugDraw = true;
+        // manager.enabledDebugDraw = true;
         this.setupCollider();
     }
 
@@ -62,6 +62,12 @@ export default class Platform extends cc.Component {
             this.gamePlay.platformFound = true;
             this.player.stopAllPlayerActions();
             this.player.startJump(this.player.getCurrentPosition());
+            //
+            if(this.node.getPosition().y > -this.gamePlay.size.height*0.1){
+                for (let index = 0; index < 2; index++) {
+                    this.gamePlay.addNewPlatform(false);            
+                }
+            }
         }
     }
 
