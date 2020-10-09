@@ -53,6 +53,7 @@ export default class GamePlay extends cc.Component {
         this.size = this.container.getContentSize();
         this.playerPreviousPos = this.player.getPosition();
         this.player.zIndex = ComponentZOrders.Player;
+        this.player.name = "player";
         this.headerBar.zIndex = ComponentZOrders.Player - 1;
         this.player.getComponent("Player").gamePlay = this;
         // for (let index = 0; index < 20; index++) {
@@ -81,7 +82,7 @@ export default class GamePlay extends cc.Component {
             });
         }
         // check player up/down movement
-        if(this.player.y < this.playerPreviousPos.y){
+        if(this.player.y < (this.playerPreviousPos.y - 2)){
             this.isDownWard = true;
         }else{
             this.isDownWard = false;
@@ -99,8 +100,8 @@ export default class GamePlay extends cc.Component {
        }
        // moves platform down
        if(this.player.y > 0){
-           this.movePlatformsDown(4); 
-           if(this.container.childrenCount < 250)
+           this.movePlatformsDown(6); 
+           if(this.container.childrenCount < 100)
                 this.addNewPlatform_1();
        }
        // destroy platform which are out of bounds
@@ -124,6 +125,10 @@ export default class GamePlay extends cc.Component {
             if(child.name == "platform"){
                 child.y = child.y-offset; 
             }
+            if(child.name == "player"){
+                child.y = child.y-(offset*0.7); 
+            }
+
         });
     }
     
@@ -151,12 +156,11 @@ export default class GamePlay extends cc.Component {
         platform.setPosition(cc.v2(randX,randY));
         this.lastPlatformYPosition = platform.getPosition().y;
         // 
-        cc.log("timer="+this.timer);
-        if(this.timer > 10 && this.randomIntFromInterval(1,10) <= 7){
-            cc.log("Moving");
-            platform.getComponent('Platform').type = PlatformType.Moving;
-        }
-        platform.getComponent('Platform').type = PlatformType.Moving;
+        // cc.log("timer="+this.timer);
+        // if(this.timer > 10 && this.randomIntFromInterval(1,10) <= 7){
+        //     cc.log("Moving");
+        //     platform.getComponent('Platform').type = PlatformType.Moving;
+        // }
         platform.getComponent('Platform').gamePlay = this;
         platform.getComponent('Platform').player = this.player.getComponent("Player");
     }
