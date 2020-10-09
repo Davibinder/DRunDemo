@@ -40,10 +40,14 @@ export default class Platform extends cc.Component {
     }
 
     start () {
+        if(this.type == PlatformType.Moving){
+            this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
+        }
 
     }
 
-    update (dt) {}
+    update (dt) {
+    }
 
     setupCollider(){
         this.node.addComponent(cc.BoxCollider);
@@ -58,6 +62,23 @@ export default class Platform extends cc.Component {
     */
    onCollisionEnter (other, self) {
         cc.log('on collision enter');
+        if(other.node.group === 'left'){
+            cc.log("collided with left");
+            if(this.type == PlatformType.Moving){
+                this.node.stopAllActions();
+                this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
+            }
+
+        }else if(other.node.group === 'right'){
+            cc.log("collided with right");
+            if(this.type == PlatformType.Moving){
+                this.node.stopAllActions();
+                this.node.runAction(cc.moveTo(5,cc.v2(-this.gamePlay.size.width/2,this.node.y)));
+            }
+
+        }else{
+
+        }
         if(this.gamePlay.isDownWard){
             this.gamePlay.platformFound = true;
             this.player.stopAllPlayerActions();

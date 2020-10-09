@@ -9,12 +9,11 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 
+import {PlatformType} from "./Platform"
 
 enum GSMacros {
      kMinPlatformStep =	30,
-     kMaxPlatformStep =	100,    //this needs to be same as max jump force
-     kNumPlatforms	 =	15,     //more platforms to avoid poping in the case they get together
-     kPlatformStepIncrease = 5,
+     kMaxPlatformStep =	80,
 }
 
 enum ComponentZOrders {
@@ -46,9 +45,11 @@ export default class GamePlay extends cc.Component {
 
     minPlatformModifier:number = GSMacros.kMinPlatformStep;
     lastPlatformYPosition : number = 0;
+    timer : number = 0;
     
     // LIFE-CYCLE CALLBACKS:
     onLoad () {        
+        this.timer = 0;
         this.size = this.container.getContentSize();
         this.playerPreviousPos = this.player.getPosition();
         this.player.zIndex = ComponentZOrders.Player;
@@ -58,6 +59,10 @@ export default class GamePlay extends cc.Component {
         //     this.addNewPlatform(true);            
         // }
         this.addNewPlatformIntials();
+        // counter
+        // this.schedule(function() {
+        //     this.timer = this.timer+1;
+        // }, 1);
     }
 
     start () {
@@ -65,13 +70,23 @@ export default class GamePlay extends cc.Component {
     }
 
     update (dt) {
+        // Game Over
+        if(this.player.y < -this.size.height/2 + 50){
+            cc.director.loadScene("GameOver",(error: any, scene: cc.Scene)=>{
+                if (error) {
+                    cc.log(error.message || error);
+                }else{
+                    cc.log("Game Over Scene loaded successfully");
+                }
+            });
+        }
         // check player up/down movement
-        if(this.player.getPosition().y < this.playerPreviousPos.y){
+        if(this.player.y < this.playerPreviousPos.y){
             this.isDownWard = true;
         }else{
             this.isDownWard = false;
         }        
-        this.playerPreviousPos = this.player.getPosition();
+        this.playerPreviousPos = this.player.position;
         // Player left /right bounds
         if(this.player.x < -this.size.width/2 + (this.player.getContentSize().width * 1.2))
             this.player.x = -this.size.width/2 + (this.player.getContentSize().width *1.2);
@@ -97,7 +112,8 @@ export default class GamePlay extends cc.Component {
     destroyPlatforms(){
         this.container.children.forEach(child => {
             if(child.y < -this.size.height/2){
-                child.destroy()
+                child.destroy();
+                this.timer = this.timer+1;
             }
         });
 
@@ -134,6 +150,13 @@ export default class GamePlay extends cc.Component {
         var randY =  this.lastPlatformYPosition + this.randomIntFromInterval(this.minPlatformModifier,GSMacros.kMaxPlatformStep);
         platform.setPosition(cc.v2(randX,randY));
         this.lastPlatformYPosition = platform.getPosition().y;
+        // 
+        cc.log("timer="+this.timer);
+        if(this.timer > 10 && this.randomIntFromInterval(1,10) <= 7){
+            cc.log("Moving");
+            platform.getComponent('Platform').type = PlatformType.Moving;
+        }
+        platform.getComponent('Platform').type = PlatformType.Moving;
         platform.getComponent('Platform').gamePlay = this;
         platform.getComponent('Platform').player = this.player.getComponent("Player");
     }
