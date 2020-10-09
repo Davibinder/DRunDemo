@@ -82,7 +82,7 @@ export default class GamePlay extends cc.Component {
             });
         }
         // check player up/down movement
-        if(this.player.y < (this.playerPreviousPos.y - 2)){
+        if(this.player.y < this.playerPreviousPos.y){
             this.isDownWard = true;
         }else{
             this.isDownWard = false;
