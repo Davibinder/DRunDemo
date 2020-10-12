@@ -10,6 +10,7 @@
 
 
 import {PlatformType} from "./Platform"
+import {GameUtils} from "./GameUtils"
 
 enum ComponentZOrders {
     Player      =   50,    
@@ -136,11 +137,12 @@ export default class GamePlay extends cc.Component {
     }
 
     addNewPlatform(){
+        
         var platform = cc.instantiate(this.platForm);
         platform.name = "platform";
         this.container.addChild(platform);
-        var randX =  this.randomIntFromInterval(-this.size.width/2+70,this.size.width/2-100);
-        var randY =  this.lastPlatformYPosition + this.randomIntFromInterval(this.minPlatformDistance,this.maxPlatformDistance);
+        var randX =  GameUtils.randomIntFromInterval(-this.size.width/2+70,this.size.width/2-100);
+        var randY =  this.lastPlatformYPosition + GameUtils.randomIntFromInterval(this.minPlatformDistance,this.maxPlatformDistance);
         platform.setPosition(cc.v2(randX,randY));
         this.lastPlatformYPosition = platform.getPosition().y;
         cc.log("Platform last y pos:"+platform.getPosition().y);
@@ -148,9 +150,4 @@ export default class GamePlay extends cc.Component {
         platform.getComponent('Platform').gamePlay = this;
         platform.getComponent('Platform').player = this.player.getComponent("Player");
     }
-
-    randomIntFromInterval(min, max) { // min and max included 
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
 }
