@@ -987,7 +987,7 @@
     "_is3DNode": false,
     "groupIndex": 0,
     "showInEditor": false,
-    "_id": "75hyNYad9Cd5V++gl9ORRW"
+    "_id": "e2/Y6GoG1Afo9fSZJwqA0t"
   },
   {
     "__type__": "cc.Label",
@@ -1017,7 +1017,7 @@
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
     "_N$cacheMode": 0,
-    "_id": "7fV4ybzBtFTp3mZzCaPVGq"
+    "_id": "93kTKmPt1K1bXAO7eF02CO"
   },
   {
     "__type__": "cc.PrivateNode",
@@ -1076,7 +1076,7 @@
     "_is3DNode": false,
     "groupIndex": 0,
     "showInEditor": false,
-    "_id": "e3Nv4PmIFCZYaQVdiSzhyn"
+    "_id": "84CieDTPZLkKhfaWY7tW0n"
   },
   {
     "__type__": "cc.Label",
@@ -1106,7 +1106,7 @@
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
     "_N$cacheMode": 0,
-    "_id": "a0BIL6yiFLnLk/MC8F1el2"
+    "_id": "a14HwqZ6lERo/MULG0GXgV"
   },
   {
     "__type__": "cc.PrivateNode",
@@ -1165,7 +1165,7 @@
     "_is3DNode": false,
     "groupIndex": 0,
     "showInEditor": false,
-    "_id": "d8KdW7DaBFbafOAdVAomyw"
+    "_id": "3aSJ7qBFNCyoLGjSN6tDuj"
   },
   {
     "__type__": "cc.Label",
@@ -1181,8 +1181,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "graphics used inside are for only learning ",
-    "_N$string": "graphics used inside are for only learning ",
+    "_string": "graphics used inside are only for learning ",
+    "_N$string": "graphics used inside are only for learning ",
     "_fontSize": 25,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -1195,7 +1195,7 @@
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
     "_N$cacheMode": 0,
-    "_id": "1dt2j2bEJHGZhl+b2wDYV5"
+    "_id": "4b3tQlYBVP+afyJfQnUU6r"
   },
   {
     "__type__": "cc.PrivateNode",
@@ -1254,7 +1254,7 @@
     "_is3DNode": false,
     "groupIndex": 0,
     "showInEditor": false,
-    "_id": "9cUwXmAH5Is5fVFSmnlskv"
+    "_id": "55aDZ6IgVBa5SkahJzsZjS"
   },
   {
     "__type__": "cc.Label",
@@ -1284,7 +1284,7 @@
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
     "_N$cacheMode": 0,
-    "_id": "18Ri9W0M1PypfM+Nl0hq2f"
+    "_id": "cfGnYboaRL3KbNN5kMNT5k"
   },
   {
     "__type__": "cc.RichText",
@@ -1296,7 +1296,7 @@
     "_enabled": true,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
-    "_N$string": "The purpose of this software is assignmet for MX Player recruitment process. All copyright graphics used inside are for only learning purpose.",
+    "_N$string": "The purpose of this software is assignmet for MX Player recruitment process. All copyright graphics used inside are only for learning purpose.",
     "_N$horizontalAlign": 0,
     "_N$fontSize": 25,
     "_N$font": null,

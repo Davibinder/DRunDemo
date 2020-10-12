@@ -11,11 +11,6 @@
 
 import {PlatformType} from "./Platform"
 
-enum GSMacros {
-     kMinPlatformStep =	30,
-     kMaxPlatformStep =	80,
-}
-
 enum ComponentZOrders {
     Player      =   50,    
     Platform    =   45,
@@ -27,6 +22,9 @@ export default class GamePlay extends cc.Component {
 
     @property(cc.Node)
     player: cc.Node = null;
+
+    @property(cc.Label)
+    score: cc.Label = null;
 
     @property(cc.Node)
     container: cc.Node = null;
@@ -41,11 +39,15 @@ export default class GamePlay extends cc.Component {
     playerPreviousPos : cc.Vec2 = null;
     isDownWard : boolean = false;
     platformFound: boolean = false;
-    isJumpCompleted:boolean = true;    
+    isJumpCompleted:boolean = false;    
 
-    minPlatformModifier:number = GSMacros.kMinPlatformStep;
+    minPlatformDistance:number = 30;
+    maxPlatformDistance:number = 80;
+
     lastPlatformYPosition : number = 0;
     timer : number = 0;
+
+    pPlatformY: number = 0;
     
     // LIFE-CYCLE CALLBACKS:
     onLoad () {        
@@ -56,14 +58,8 @@ export default class GamePlay extends cc.Component {
         this.player.name = "player";
         this.headerBar.zIndex = ComponentZOrders.Player - 1;
         this.player.getComponent("Player").gamePlay = this;
-        // for (let index = 0; index < 20; index++) {
-        //     this.addNewPlatform(true);            
-        // }
-        this.addNewPlatformIntials();
-        // counter
-        // this.schedule(function() {
-        //     this.timer = this.timer+1;
-        // }, 1);
+        this.addNewPlatforms();
+        
     }
 
     start () {
@@ -82,7 +78,7 @@ export default class GamePlay extends cc.Component {
             });
         }
         // check player up/down movement
-        if(this.player.y < this.playerPreviousPos.y){
+        if(this.player.y < (this.playerPreviousPos.y - 2)){
             this.isDownWard = true;
         }else{
             this.isDownWard = false;
@@ -98,12 +94,7 @@ export default class GamePlay extends cc.Component {
        if(!this.platformFound && this.isJumpCompleted){
         this.player.setPosition(cc.v2(this.player.getPosition().x,this.player.getPosition().y=this.player.getPosition().y-15))
        }
-       // moves platform down
-       if(this.player.y > 0){
-           this.movePlatformsDown(6); 
-           if(this.container.childrenCount < 100)
-                this.addNewPlatform_1();
-       }
+
        // destroy platform which are out of bounds
        this.destroyPlatforms();
 
@@ -112,74 +103,50 @@ export default class GamePlay extends cc.Component {
     // methods
     destroyPlatforms(){
         this.container.children.forEach(child => {
-            if(child.y < -this.size.height/2){
+            if(child.y < -this.size.height*0.5 && child.name == "platform"){
                 child.destroy();
+                this.score.string = "Score : "+this.timer;
                 this.timer = this.timer+1;
             }
         });
-
     }
     movePlatformsDown(offset){
-        cc.log("child counts : "+this.container.childrenCount);
+        // cc.log("child counts : "+this.container.childrenCount);
         this.container.children.forEach(child => {
-            if(child.name == "platform"){
-                child.y = child.y-offset; 
+            if(child.name == "platform" || child.name == "player"){
+                child.runAction(cc.moveTo(0.3,cc.v2(child.x,child.y-offset)));
             }
-            if(child.name == "player"){
-                child.y = child.y-(offset*0.7); 
-            }
-
         });
     }
     
-    addNewPlatformIntials(){
+    addNewPlatforms(){
         var platform = cc.instantiate(this.platForm);
         platform.name = "platform";
         this.container.addChild(platform);
         platform.setPosition(cc.v2(this.player.getPosition().x,this.player.getPosition().y - 50));
         this.lastPlatformYPosition = platform.getPosition().y;
+        this.pPlatformY =  platform.getPosition().y;
         platform.getComponent('Platform').gamePlay = this;
         platform.getComponent('Platform').player = this.player.getComponent("Player");
-        let tempA = 0;
-        while(tempA < 15) {
-            this.addNewPlatform_1();
-            tempA = tempA+1;
+        let level_1 = 0;
+        while(level_1 < 1000) {
+            this.addNewPlatform();
+            level_1 = level_1 + 1;
         }
     }
 
-    addNewPlatform_1(){
+    addNewPlatform(){
         var platform = cc.instantiate(this.platForm);
         platform.name = "platform";
         this.container.addChild(platform);
         var randX =  this.randomIntFromInterval(-this.size.width/2+70,this.size.width/2-100);
-        var randY =  this.lastPlatformYPosition + this.randomIntFromInterval(this.minPlatformModifier,GSMacros.kMaxPlatformStep);
+        var randY =  this.lastPlatformYPosition + this.randomIntFromInterval(this.minPlatformDistance,this.maxPlatformDistance);
         platform.setPosition(cc.v2(randX,randY));
         this.lastPlatformYPosition = platform.getPosition().y;
-        // 
-        // cc.log("timer="+this.timer);
-        // if(this.timer > 10 && this.randomIntFromInterval(1,10) <= 7){
-        //     cc.log("Moving");
-        //     platform.getComponent('Platform').type = PlatformType.Moving;
-        // }
+        cc.log("Platform last y pos:"+platform.getPosition().y);
+        // platform.getComponent('Platform').type = PlatformType.Static;
         platform.getComponent('Platform').gamePlay = this;
         platform.getComponent('Platform').player = this.player.getComponent("Player");
-    }
-
-    addNewPlatform(initials:boolean) {
-        var platform = cc.instantiate(this.platForm);
-        platform.name = "platform";
-        this.container.addChild(platform);
-        platform.setPosition(this.getNewPlatformPosition(initials));
-        platform.getComponent('Platform').gamePlay = this;
-        platform.getComponent('Platform').player = this.player.getComponent("Player");
-    }
-
-    getNewPlatformPosition (initials:boolean) {
-        var randX =  this.randomIntFromInterval(-this.size.width/2+70,this.size.width/2-100);
-        var randY =  this.randomIntFromInterval(-this.size.height/2+70,this.size.height/2-70);
-        if (!initials)
-            randY =  this.randomIntFromInterval(70,this.size.height*0.7);
-        return cc.v2(randX, randY);
     }
 
     randomIntFromInterval(min, max) { // min and max included 

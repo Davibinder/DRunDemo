@@ -114,6 +114,9 @@
     "_enabled": true,
     "label": null,
     "type": 100,
+    "frame": {
+      "__uuid__": "9aa9d47c-d537-47a1-bc36-8d0a5d2bedf4"
+    },
     "_id": ""
   },
   {

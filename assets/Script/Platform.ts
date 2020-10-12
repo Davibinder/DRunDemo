@@ -28,11 +28,32 @@ export default class Platform extends cc.Component {
     @property
     type: PlatformType = 0;
 
+    @property(cc.SpriteFrame)
+    frame:cc.SpriteFrame = null;
+
     gamePlay : GamePlay = null;
     player : Player = null;
+
+    brokenFrame:cc.SpriteFrame = null;
+    movingFrame:cc.SpriteFrame = null;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        cc.loader.loadRes("platform/broken", cc.SpriteFrame, (err: Error, spriteFrame: any): void => {
+            if (err) {
+                cc.log(err.message || err);
+                return;
+            }
+            this.brokenFrame = spriteFrame;
+            this.frame = this.brokenFrame;
+        });
+        cc.loader.loadRes("platform/moving", cc.SpriteFrame, (err: Error, spriteFrame: any): void => {
+            if (err) {
+                cc.log(err.message || err);
+                return;
+            }
+            this.movingFrame = spriteFrame;
+        });
         var manager = cc.director.getCollisionManager();
         manager.enabled = true;
         // manager.enabledDebugDraw = true;
@@ -40,6 +61,16 @@ export default class Platform extends cc.Component {
     }
 
     start () {
+        // cc.log(this.brokenFrame);
+       
+        let prob = Math.random();
+        if( prob<= 0.4 && prob>= 0.1){
+            // this.type = PlatformType.Moving;
+        }
+        if( prob> 0.5 && prob <= 0.9){
+            // this.type = PlatformType.StaticBroken;
+        }
+
         if(this.type == PlatformType.Moving){
             this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
         }
@@ -61,16 +92,16 @@ export default class Platform extends cc.Component {
     * @param  {Collider} self  Self Collider Component
     */
    onCollisionEnter (other, self) {
-        cc.log('on collision enter');
+        // cc.log('on collision enter');
         if(other.node.group === 'left'){
-            cc.log("collided with left");
+            // cc.log("collided with left");
             if(this.type == PlatformType.Moving){
                 this.node.stopAllActions();
                 this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
             }
 
         }else if(other.node.group === 'right'){
-            cc.log("collided with right");
+            // cc.log("collided with right");
             if(this.type == PlatformType.Moving){
                 this.node.stopAllActions();
                 this.node.runAction(cc.moveTo(5,cc.v2(-this.gamePlay.size.width/2,this.node.y)));
@@ -79,17 +110,12 @@ export default class Platform extends cc.Component {
         }else{
 
         }
-        if(this.gamePlay.isDownWard){
+        if(this.gamePlay.isDownWard && other.node.group === 'player'){
             this.gamePlay.platformFound = true;
             this.player.stopAllPlayerActions();
             this.player.startJump(this.player.getCurrentPosition());
-            //
-            if(this.node.getPosition().y > -this.gamePlay.size.height*0.1){
-                // this.gamePlay.addNewPlatform_1();
-                // for (let index = 0; index < 2; index++) {
-                //     this.gamePlay.addNewPlatform(false);            
-                // }
-            }
+            if((this.node.y - this.gamePlay.pPlatformY) > 0)
+                this.gamePlay.movePlatformsDown(this.node.y - this.gamePlay.pPlatformY)
         }
     }
 
