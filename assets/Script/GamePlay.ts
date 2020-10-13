@@ -203,10 +203,10 @@ export default class GamePlay extends cc.Component {
             platform.getComponent('Platform').type = PlatformType.StaticBroken;
             platform.getComponent('Platform').spring.active = false;
             platform.getComponent('Platform').helicopter.active = false;
-        }else if(platform.y > this.size.width && prob > 0.6 && prob <= 1){
+        }else if(platform.y > this.size.width && prob > 0.8 && prob <= 1){
             if(Math.random() >= 0.2) platform.getComponent('Platform').spring.active = false;
             platform.getComponent('Platform').helicopter.active = false;
-            // platform.getComponent('Platform').type = PlatformType.Moving;
+            platform.getComponent('Platform').type = PlatformType.Moving;
         }else{
             if(Math.random() >= 0.2) platform.getComponent('Platform').helicopter.active = false;
             platform.getComponent('Platform').spring.active = false;

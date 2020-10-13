@@ -23,6 +23,12 @@ export enum PowerUps {
     Spring      =   202,
 }
 
+export enum MoveActionTags {
+    LeftMove    =   300,    
+    RightMove   =   301,    
+    Default     =   302,
+}
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -66,19 +72,34 @@ export default class Platform extends cc.Component {
         }else if(this.type == PlatformType.StaticBroken){
             this.node.getComponent(cc.Sprite).spriteFrame = this.brokenFrame;
         }
-        if(this.type == PlatformType.Moving){
-            this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
-        }
 
     }
 
     update (dt) {
+        if(this.node.y < this.gamePlay.size.height/2 && this.type == PlatformType.Moving){
+            if(this.node.getActionByTag(MoveActionTags.Default) || this.node.getActionByTag(MoveActionTags.LeftMove) || this.node.getActionByTag(MoveActionTags.RightMove)) return;
+            var action = cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y));
+            action.setTag(MoveActionTags.Default);
+            this.node.runAction(action);
+        }
     }
 
     setupCollider(){
         this.node.addComponent(cc.BoxCollider);
         this.node.getComponent(cc.BoxCollider).enabled = true;
         this.node.getComponent(cc.BoxCollider).size = this.node.getContentSize();
+    }
+
+    movePlatformHorizontly(isLeft){
+        if(isLeft){
+            var action = cc.moveTo(5,cc.v2(-this.gamePlay.size.width/2,this.node.y));
+            action.setTag(MoveActionTags.LeftMove);
+            this.node.runAction(action);
+        }else{
+            var action = cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y));
+            action.setTag(MoveActionTags.RightMove);
+            this.node.runAction(action);
+        }        
     }
 
     /**
@@ -92,14 +113,16 @@ export default class Platform extends cc.Component {
             // cc.log("collided with left");
             if(this.type == PlatformType.Moving){
                 this.node.stopAllActions();
-                this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
+                // this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
+                this.movePlatformHorizontly(false);
             }
 
         }else if(other.node.group === 'right'){
             // cc.log("collided with right");
             if(this.type == PlatformType.Moving){
                 this.node.stopAllActions();
-                this.node.runAction(cc.moveTo(5,cc.v2(-this.gamePlay.size.width/2,this.node.y)));
+                // this.node.runAction(cc.moveTo(5,cc.v2(-this.gamePlay.size.width/2,this.node.y)));
+                this.movePlatformHorizontly(true);
             }
 
         }else{
