@@ -137,10 +137,11 @@ export default class Platform extends cc.Component {
 
         }
         if(this.gamePlay.isDownWard && other.node.group === 'player'){
-            AudioMgr.getInstance().playEffect("sounds/jump.mp3");
             if(this.type == PlatformType.StaticBroken){
+                AudioMgr.getInstance().playEffect("sounds/break.mp3");
                 this.node.destroy();
             }else{
+                AudioMgr.getInstance().playEffect("sounds/jump.mp3");
                 this.gamePlay.platformFound = true;
                 this.player.stopAllPlayerActions();
                 this.player.startJump(this.player.getCurrentPosition());
