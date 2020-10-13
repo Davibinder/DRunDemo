@@ -11,6 +11,7 @@
 
 import {PlatformType,PowerUps} from "./Platform";
 import {GameUtils} from "./GameUtils";
+import {AudioMgr} from "./AudioMgr";
 
 
 enum ComponentZOrders {
@@ -135,6 +136,7 @@ export default class GamePlay extends cc.Component {
      */
     movePlatformsDown(speed,offset,powerUp){
         // cc.log("child counts : "+this.container.childrenCount);
+        AudioMgr.getInstance().playEffect("sounds/jump.mp3");
         this.container.children.forEach(child => {
             if(child.name == "platform" || child.name == "player"){
                 child.runAction(cc.moveTo(speed,cc.v2(child.x,child.y-offset)));
@@ -146,6 +148,7 @@ export default class GamePlay extends cc.Component {
      * @param powerup 
      */
     powerUpsBehaviour(powerup){
+        AudioMgr.getInstance().playEffect("sounds/power_jump.mp3");
         if(powerup == PowerUps.Helicopter){
             let actionSequenve = cc.sequence(
                 cc.callFunc(function() {
