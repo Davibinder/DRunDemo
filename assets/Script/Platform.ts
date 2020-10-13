@@ -17,6 +17,12 @@ export enum PlatformType {
     StaticBroken    =   102,
 }
 
+export enum PowerUps {
+    Normal      =   200,    
+    Helicopter  =   201,    
+    Spring      =   202,
+}
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -28,49 +34,38 @@ export default class Platform extends cc.Component {
     @property
     type: PlatformType = 0;
 
+    @property(cc.Node)
+    spring: cc.Node = null;
+
+    @property(cc.Node)
+    helicopter: cc.Node = null;
+
     @property(cc.SpriteFrame)
-    frame:cc.SpriteFrame = null;
+    brokenFrame:cc.SpriteFrame = null;
+
+    @property(cc.SpriteFrame)
+    movingFrame:cc.SpriteFrame = null;
 
     gamePlay : GamePlay = null;
     player : Player = null;
 
-    brokenFrame:cc.SpriteFrame = null;
-    movingFrame:cc.SpriteFrame = null;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        cc.loader.loadRes("platform/broken", cc.SpriteFrame, (err: Error, spriteFrame: any): void => {
-            if (err) {
-                cc.log(err.message || err);
-                return;
-            }
-            this.brokenFrame = spriteFrame;
-            this.frame = this.brokenFrame;
-        });
-        cc.loader.loadRes("platform/moving", cc.SpriteFrame, (err: Error, spriteFrame: any): void => {
-            if (err) {
-                cc.log(err.message || err);
-                return;
-            }
-            this.movingFrame = spriteFrame;
-        });
         var manager = cc.director.getCollisionManager();
         manager.enabled = true;
         // manager.enabledDebugDraw = true;
         this.setupCollider();
     }
 
-    start () {
-        // cc.log(this.brokenFrame);
-       
-        let prob = Math.random();
-        if( prob<= 0.4 && prob>= 0.1){
-            // this.type = PlatformType.Moving;
+    start () {        
+        // this.helicopter.active = false;
+        // this.spring.active = false;
+        if(this.type == PlatformType.Moving){
+            this.node.getComponent(cc.Sprite).spriteFrame = this.movingFrame;
+        }else if(this.type == PlatformType.StaticBroken){
+            this.node.getComponent(cc.Sprite).spriteFrame = this.brokenFrame;
         }
-        if( prob> 0.5 && prob <= 0.9){
-            // this.type = PlatformType.StaticBroken;
-        }
-
         if(this.type == PlatformType.Moving){
             this.node.runAction(cc.moveTo(5,cc.v2(this.gamePlay.size.width/2,this.node.y)));
         }
@@ -111,11 +106,31 @@ export default class Platform extends cc.Component {
 
         }
         if(this.gamePlay.isDownWard && other.node.group === 'player'){
-            this.gamePlay.platformFound = true;
-            this.player.stopAllPlayerActions();
-            this.player.startJump(this.player.getCurrentPosition());
-            if((this.node.y - this.gamePlay.pPlatformY) > 0)
-                this.gamePlay.movePlatformsDown(this.node.y - this.gamePlay.pPlatformY)
+            if(this.type == PlatformType.StaticBroken){
+                this.node.destroy();
+            }else{
+                this.gamePlay.platformFound = true;
+                this.player.stopAllPlayerActions();
+                this.player.startJump(this.player.getCurrentPosition());
+                if((this.node.y - this.gamePlay.pPlatformY) > 0){
+                    if(this.helicopter.active == true){
+                        this.gamePlay.powerUpsBehaviour(PowerUps.Helicopter);
+                    }
+                    else if(this.spring.active == true){
+                        this.gamePlay.powerUpsBehaviour(PowerUps.Spring);
+                    }else {
+                        this.gamePlay.movePlatformsDown(0.3,(this.node.y - this.gamePlay.pPlatformY),PowerUps.Normal);
+                    }
+                }else{
+                    if(this.helicopter.active == true){
+                        this.gamePlay.powerUpsBehaviour(PowerUps.Helicopter);
+                    }
+                    else if(this.spring.active == true){
+                        this.gamePlay.powerUpsBehaviour(PowerUps.Spring);
+                    }
+                }
+                
+            }
         }
     }
 

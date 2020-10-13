@@ -27,6 +27,12 @@ export default class Player extends cc.Component {
     @property(cc.Label)
     label: cc.Label = null;
 
+    @property(cc.SpriteFrame)
+    leftFrame:cc.SpriteFrame = null;
+
+    @property(cc.SpriteFrame)
+    rightFrame:cc.SpriteFrame = null;
+
     // genral TS properties
     jumpHeight : number = 0.0;
     
