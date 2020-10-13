@@ -28,7 +28,11 @@ export default class NewClass extends cc.Component {
     }
 
     // update (dt) {}
-
+    /**
+     * Play Button action callback
+     * @param event 
+     * @param data 
+     */
     playButtonAction(event,data){
         cc.director.loadScene("GamePlay",(error: any, scene: cc.Scene)=>{
             if (error) {
@@ -38,7 +42,11 @@ export default class NewClass extends cc.Component {
             }
         });
     }
-
+    /**
+     * Home button action callback
+     * @param event 
+     * @param data 
+     */
     homeButtonAction(event,data){
         cc.director.loadScene("helloworld",(error: any, scene: cc.Scene)=>{
             if (error) {

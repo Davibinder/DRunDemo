@@ -84,12 +84,19 @@ export default class Platform extends cc.Component {
         }
     }
 
+    /**
+     * Add dynamic collider to Pre-fabricated resources
+     */
     setupCollider(){
         this.node.addComponent(cc.BoxCollider);
         this.node.getComponent(cc.BoxCollider).enabled = true;
         this.node.getComponent(cc.BoxCollider).size = this.node.getContentSize();
     }
 
+    /**
+     * Horozontal Movement of movable platforms
+     * @param isLeft 
+     */
     movePlatformHorizontly(isLeft){
         if(isLeft){
             var action = cc.moveTo(5,cc.v2(-this.gamePlay.size.width/2,this.node.y));

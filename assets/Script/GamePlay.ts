@@ -114,7 +114,9 @@ export default class GamePlay extends cc.Component {
 
     }
 
-    // methods
+    /**
+     * Destroy platform which gets out of screen from below
+     */
     destroyPlatforms(){
         this.container.children.forEach(child => {
             if(child.y < -this.size.height*0.5 && child.name == "platform"){
@@ -124,6 +126,13 @@ export default class GamePlay extends cc.Component {
             }
         });
     }
+
+    /**
+     * Move platorm down according to player step
+     * @param speed 
+     * @param offset 
+     * @param powerUp 
+     */
     movePlatformsDown(speed,offset,powerUp){
         // cc.log("child counts : "+this.container.childrenCount);
         this.container.children.forEach(child => {
@@ -132,7 +141,10 @@ export default class GamePlay extends cc.Component {
             }
         });
     }
-
+    /**
+     * Set Player/Doodle behaviour in case power up(Helocopter/spring) collided
+     * @param powerup 
+     */
     powerUpsBehaviour(powerup){
         if(powerup == PowerUps.Helicopter){
             let actionSequenve = cc.sequence(
@@ -169,6 +181,9 @@ export default class GamePlay extends cc.Component {
         }
     }
     
+    /**
+     * Add platforms to level
+     */
     addNewPlatforms(){
         var platform = cc.instantiate(this.platForm);
         platform.name = "platform";
@@ -186,7 +201,9 @@ export default class GamePlay extends cc.Component {
             level_1 = level_1 + 1;
         }
     }
-
+    /**
+     * Add single platform to level either on level or anywhere dynamically needed
+     */
     addNewPlatform(){
         
         var platform = cc.instantiate(this.platForm);
@@ -196,8 +213,16 @@ export default class GamePlay extends cc.Component {
         var randY =  this.lastPlatformYPosition + GameUtils.randomIntFromInterval(this.minPlatformDistance,this.maxPlatformDistance);
         platform.setPosition(cc.v2(randX,randY));
         this.lastPlatformYPosition = platform.getPosition().y;
-        
-        
+        this.platformTypeAndPowerUp(platform);
+        platform.getComponent('Platform').gamePlay = this;
+        platform.getComponent('Platform').player = this.player.getComponent("Player");
+    }
+
+    /**
+     * Function will set type of platform i.e static,moving,static broken randomly and append power ups
+     * @param platform 
+     */
+    platformTypeAndPowerUp(platform){
         let prob = Math.random();
         if(platform.y > this.size.width && prob<= 0.2 && prob>= 0.1){
             platform.getComponent('Platform').type = PlatformType.StaticBroken;
@@ -213,8 +238,5 @@ export default class GamePlay extends cc.Component {
             platform.getComponent('Platform').type = PlatformType.Static;
 
         }
-
-        platform.getComponent('Platform').gamePlay = this;
-        platform.getComponent('Platform').player = this.player.getComponent("Player");
     }
 }

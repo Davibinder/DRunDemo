@@ -79,7 +79,6 @@ export default class Player extends cc.Component {
     }
 
     startJump(position){
-        // this.node.runAction(cc.jumpTo(1,position,this.jumpHeight,1));
         var sequence = cc.sequence(
             cc.callFunc(function() {
                 this.gamePlay.isJumpCompleted = false;
@@ -102,15 +101,12 @@ export default class Player extends cc.Component {
             case cc.macro.KEY.left:
                 this.direction = PlayerDirection.Left;
                 this.node.getComponent(cc.Sprite).spriteFrame = this.leftFrame;
-                // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.right:
                 this.direction = PlayerDirection.Right;
                 this.node.getComponent(cc.Sprite).spriteFrame = this.rightFrame;
-                // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.up:
-                // this.startJump(this.getCurrentPosition());
                 break;
             case cc.macro.KEY.down:
                 break;
