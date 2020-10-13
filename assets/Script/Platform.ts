@@ -10,6 +10,7 @@
 
 import GamePlay from "./GamePlay";
 import Player from "./Player";
+import {AudioMgr} from "./AudioMgr";
 
 export enum PlatformType {
     Static          =   100,    
@@ -136,6 +137,7 @@ export default class Platform extends cc.Component {
 
         }
         if(this.gamePlay.isDownWard && other.node.group === 'player'){
+            AudioMgr.getInstance().playEffect("sounds/jump.mp3");
             if(this.type == PlatformType.StaticBroken){
                 this.node.destroy();
             }else{
