@@ -101,10 +101,12 @@ export default class Player extends cc.Component {
         switch(event.keyCode) {
             case cc.macro.KEY.left:
                 this.direction = PlayerDirection.Left;
+                this.node.getComponent(cc.Sprite).spriteFrame = this.leftFrame;
                 // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.right:
                 this.direction = PlayerDirection.Right;
+                this.node.getComponent(cc.Sprite).spriteFrame = this.rightFrame;
                 // cc.log("selected direction is ="+this.direction);
                 break;
             case cc.macro.KEY.up:
